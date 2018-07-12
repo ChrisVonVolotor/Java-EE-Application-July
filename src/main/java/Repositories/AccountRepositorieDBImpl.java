@@ -1,4 +1,4 @@
-package accountapp;
+package Repositories;
 
 import java.util.List;
 
@@ -6,8 +6,10 @@ import javax.persistence.*;
 import javax.transaction.*;
 import javax.transaction.Transactional.TxType;
 
+import accountapp.Account;
+
 @Transactional(value = TxType.SUPPORTS)
-public class AccountServiceDBImpl {
+public class AccountRepositorieDBImpl {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -37,7 +39,7 @@ public class AccountServiceDBImpl {
 		account.setFirstName(firstName);
 		account.setLastName(lastName);
 		em.getTransaction().commit();
-		return account;
+		return em.find(Account.class, account.getaId());
 	}
 
 	@Transactional(value = TxType.REQUIRED)
