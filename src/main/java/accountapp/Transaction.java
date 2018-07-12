@@ -5,12 +5,12 @@ import javax.persistence.*;
 @Entity
 public class Transaction {
 	@Id
-	private long id;
+	private long tId;
 	private double amount;
 	private String reason;
 	
-	@ManyToOne
-	@JoinColumn(name="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="aId")
 	private Account account;
 	
 
