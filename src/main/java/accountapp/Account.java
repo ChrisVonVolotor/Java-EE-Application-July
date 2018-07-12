@@ -36,4 +36,28 @@ public class Account {
 		return this.firstName + " " + this.lastName; 
 	}
 
+	public Long getaId() {
+		return aId;
+	}
+
+	public void setaId(Long aId) {
+		this.aId = aId;
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 }
