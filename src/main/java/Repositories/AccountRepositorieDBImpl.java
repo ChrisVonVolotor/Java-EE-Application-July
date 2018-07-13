@@ -6,10 +6,11 @@ import javax.persistence.*;
 import javax.transaction.*;
 import javax.transaction.Transactional.TxType;
 
+import CDI.RepositoryManager;
 import accountapp.Account;
 
 @Transactional(value = TxType.SUPPORTS)
-public class AccountRepositorieDBImpl {
+public class AccountRepositorieDBImpl implements RepositoryManager {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -43,13 +44,13 @@ public class AccountRepositorieDBImpl {
 	}
 
 	@Transactional(value = TxType.REQUIRED)
-	public Account deleteAnAccount(Account account) {
+	public String deleteAnAccount(Account account) {
 		em.find(Account.class, account.getaId());
 
 		em.getTransaction().begin();
 		em.remove(account);
 		em.getTransaction().commit();
-		return em.find(Account.class, account.getaId());
+		return account.getaId() + " deleted";
 	}
 
 }
