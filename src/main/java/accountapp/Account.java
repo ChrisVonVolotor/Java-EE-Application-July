@@ -4,14 +4,15 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Account {
-	@Id //@GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @//@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long aId;
-	@Column(length = 50)
+	@Column(length = 50) @NotNull
 	private String firstName;
-	@Column(length = 50)
+	@Column(length = 50) @NotNull
 	private String lastName;
 	
 	@OneToMany(mappedBy="account", cascade = CascadeType.ALL, orphanRemoval = true)
