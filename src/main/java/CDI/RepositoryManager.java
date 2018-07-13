@@ -5,9 +5,9 @@ import java.util.List;
 import accountapp.Account;
 
 public interface RepositoryManager {
-	public Account findAnAccount(Long aId);
-	public List<Account> findAllAccounts();
-	public Account createAnAccount(Account account);
-	public Account updateAnAccount(Account account, String firstName, String lastName);
-	public String deleteAnAccount( Account account);
+	public String findAnAccount(Long aId);
+	public String findAllAccounts();
+	public String createAnAccount(String account);
+	public String updateAnAccount(long id, String account);
+	public String deleteAnAccount( Long aId);
 }

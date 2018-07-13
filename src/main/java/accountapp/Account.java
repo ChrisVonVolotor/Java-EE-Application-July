@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Account {
-	@Id @//@GeneratedValue(strategy=GenerationType.AUTO)
+	@Id //@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long aId;
 	@Column(length = 50) @NotNull
 	private String firstName;

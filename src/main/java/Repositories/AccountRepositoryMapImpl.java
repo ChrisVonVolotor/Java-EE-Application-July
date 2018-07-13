@@ -12,37 +12,37 @@ import accountapp.Account;
 @Alternative
 public class AccountRepositoryMapImpl implements RepositoryManager {
 
-	HashMap<Long, Account> base = new HashMap<Long, Account>();
+	HashMap<Long, String> base = new HashMap<Long, Account>();
 	@Override
-	public Account findAnAccount(Long aId) {
+	public String findAnAccount(Long aId) {
 		
 		return base.get(aId);
 	}
 
 	@Override
-	public List<Account> findAllAccounts() {
-		List<Account> listAccounts = null;
-		for (Account acc : base.values()) {
+	public String findAllAccounts() {
+		List<String> listAccounts = null;
+		for (String acc : base.values()) {
 			listAccounts.add(acc);
 		}
-		return listAccounts;
+		return "{\"Accounts\":"+listAccounts+"}";
 	}
 
 	@Override
-	public Account createAnAccount(Account account) {
+	public String createAnAccount(String account) {
 		base.put(account.getaId(), account);
-		return account;
+		return "{\"new Account\":"+ account+"}";
 	}
 
 	@Override
-	public Account updateAnAccount(Account account, String firstName, String lastName) {
+	public String updateAnAccount(Account account, String firstName, String lastName) {
 		base.put(account.getaId(), account);
-		return account;
+		return "{\"Account\":"+ account+"}";
 	}
 
 	@Override
-	public String deleteAnAccount(Account account) {
-		base.remove(account.getaId());
-		return account.getaId() + " Deleted";
+	public String deleteAnAccount(Long aId) {
+		base.remove(aId);
+		return "{\"Deleted\":"+aId+"}";
 	}
 }
