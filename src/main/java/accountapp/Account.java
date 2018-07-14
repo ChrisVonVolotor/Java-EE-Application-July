@@ -15,8 +15,12 @@ public class Account {
 	@Column(length = 50) @NotNull
 	private String lastName;
 	
-	@OneToMany(mappedBy="account", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Transaction> transactions;
+	//@OneToMany(mappedBy="account", cascade = CascadeType.ALL, orphanRemoval = true)
+	//private List<Transaction> transactions;
+	
+	Account(){
+	}
+	
 	
 	Account(Long id, String firstName, String lastName){
 		this.aId=aId;
@@ -44,7 +48,7 @@ public class Account {
 	public void setaId(Long aId) {
 		this.aId = aId;
 	}
-
+/*
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
@@ -52,7 +56,7 @@ public class Account {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
-
+*/
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}

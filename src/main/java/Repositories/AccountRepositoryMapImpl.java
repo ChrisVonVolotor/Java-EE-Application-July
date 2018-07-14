@@ -12,7 +12,7 @@ import accountapp.Account;
 @Alternative
 public class AccountRepositoryMapImpl implements RepositoryManager {
 
-	HashMap<Long, String> base = new HashMap<Long, Account>();
+	HashMap<Long, String> base = new HashMap<Long, String>();
 	@Override
 	public String findAnAccount(Long aId) {
 		
@@ -30,13 +30,13 @@ public class AccountRepositoryMapImpl implements RepositoryManager {
 
 	@Override
 	public String createAnAccount(String account) {
-		base.put(account.getaId(), account);
+		base.put( (long)(base.size()), account);
 		return "{\"new Account\":"+ account+"}";
 	}
 
 	@Override
-	public String updateAnAccount(Account account, String firstName, String lastName) {
-		base.put(account.getaId(), account);
+	public String updateAnAccount(Long aId, String account) {
+		base.put(aId, account);
 		return "{\"Account\":"+ account+"}";
 	}
 
