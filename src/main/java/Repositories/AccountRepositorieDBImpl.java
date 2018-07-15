@@ -27,42 +27,46 @@ public class AccountRepositorieDBImpl implements RepositoryManager {
 
 
 	public String findAnAccount(Long aId) {
-		return "{\"Account\":"+ em.find(Account.class, aId)+"}";
+		return util.getJSONForObject(em.find(Account.class, aId));
+	}
+	
+	public Account getAnAccount(Long aId) {
+		return em.find(Account.class, aId);
 	}
 
 	public String findAllAccounts() {
-		Query query = em.createQuery("SELECT m FROM Account m ORDER BY m.aId DESC", Account.class);
+		Query query = em.createQuery("SELECT m FROM Account m");
 		Collection<Account> accounts = (Collection<Account>) query.getResultList();
 		return util.getJSONForObject(accounts);
 	}
 
 	@Transactional(REQUIRED)
 	public String createAnAccount(String account) {
-		em.getTransaction().begin();
-		em.persist(account);
-		em.getTransaction().commit();
-		return "{\"new Account\":"+ account+"}";
+		Account anAccount = util.getObjectForJSON(account, Account.class);
+		em.persist(anAccount);
+
+		return "{\"message\": \"account has been sucessfully added\"}";
 	}
 
 	@Transactional(REQUIRED)
 	public String updateAnAccount(Long aId, String account) {
-		em.find(Account.class, aId);
-		JSONObject obj = new JSONObject(account);		
-		em.getTransaction().begin();
-		//account.setFirstName(obj.firstName);
-		//account.setLastName(obj.lastName);
-		em.getTransaction().commit();
-		return "{\"Account\":"+ em.find(Account.class, aId)+"}";
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		Account thenAccount = getAnAccount(aId);
+		if(thenAccount != null) {
+		thenAccount = thisAccount;
+		em.merge(thenAccount);
+		return "{\"message\": \"account sucessfully updated\"}";
+		}else {
+			return "{\"message\": \"account not updated\"}";
+
+		}
 	}
 
 	@Transactional(REQUIRED)
 	public String deleteAnAccount(Long aId) {
-		
-
-		em.getTransaction().begin();
-		em.remove(em.find(Account.class, aId));
-		em.getTransaction().commit();
-		return "{\"Deleted\":"+aId+"}";
+		Account accountInDB = getAnAccount(aId);
+		em.remove(accountInDB);
+		return "{\"message\": \"account sucessfully deleted\"}";
 	}
 
 }
