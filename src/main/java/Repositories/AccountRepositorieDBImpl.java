@@ -3,6 +3,7 @@ package Repositories;
 import java.util.Collection;
 import java.util.List;
 
+import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -15,11 +16,12 @@ import CDI.RepositoryManager;
 import accountapp.Account;
 import util.JSONUtil;
 
+@Default
 @Transactional(SUPPORTS)
 public class AccountRepositorieDBImpl implements RepositoryManager {
 	 JSONObject json = new JSONObject();
 
-	@PersistenceContext
+	@PersistenceContext(unitName = "primary")
 	private EntityManager em;
 	
 	@Inject

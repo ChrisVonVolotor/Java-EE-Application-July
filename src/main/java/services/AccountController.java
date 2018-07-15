@@ -11,15 +11,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-
-import Repositories.AccountRepositorieDBImpl;
-import accountapp.Account;
+import CDI.RepositoryManager;
 
 @Path("/account")
 public class AccountController {
 
 	@Inject
-	private AccountRepositorieDBImpl accountService;
+	private RepositoryManager accountService;
 	
 	@GET
 	@Path("/json")

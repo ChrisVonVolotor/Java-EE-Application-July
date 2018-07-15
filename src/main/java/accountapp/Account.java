@@ -17,12 +17,9 @@ public class Account {
 	
 	//@OneToMany(mappedBy="account", cascade = CascadeType.ALL, orphanRemoval = true)
 	//private List<Transaction> transactions;
+	public Account() {};
 	
-	Account(){
-	}
-	
-	
-	Account(Long id, String firstName, String lastName){
+	public Account(Long id, String firstName, String lastName){
 		this.aId=aId;
 		this.firstName=firstName;
 		this.lastName=lastName;

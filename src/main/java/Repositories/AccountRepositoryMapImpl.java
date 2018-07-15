@@ -5,44 +5,61 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
 
 import CDI.RepositoryManager;
 import accountapp.Account;
+import util.JSONUtil;
 
 @Alternative
 public class AccountRepositoryMapImpl implements RepositoryManager {
 
-	HashMap<Long, String> base = new HashMap<Long, String>();
+	HashMap<Long, Account> base;
+	
+	@Inject
+	private JSONUtil util;
+	
+	public AccountRepositoryMapImpl() {
+		this.base = new HashMap<Long, Account>();
+		initAccountMap();
+	}
+	
+	private void initAccountMap() {
+		Account account = new Account(1234L, "Joe", "Bloggs");
+		base.put(1234L, account);
+		
+	}
+
 	@Override
 	public String findAnAccount(Long aId) {
 		
-		return base.get(aId);
+		return util.getJSONForObject(base.get(aId));
 	}
 
 	@Override
 	public String findAllAccounts() {
-		List<String> listAccounts = null;
-		for (String acc : base.values()) {
-			listAccounts.add(acc);
-		}
-		return "{\"Accounts\":"+listAccounts+"}";
+
+		return  util.getJSONForObject(base.values());
 	}
 
 	@Override
 	public String createAnAccount(String account) {
-		base.put( (long)(base.size()), account);
-		return "{\"new Account\":"+ account+"}";
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		base.put(thisAccount.getaId(), thisAccount);
+
+		return account;
 	}
 
 	@Override
 	public String updateAnAccount(Long aId, String account) {
-		base.put(aId, account);
-		return "{\"Account\":"+ account+"}";
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		base.put(aId, thisAccount);
+		return account;
 	}
 
 	@Override
 	public String deleteAnAccount(Long aId) {
 		base.remove(aId);
-		return "{\"Deleted\":"+aId+"}";
+		return "{\"message\": \"accout sucessfully removed\"}";
 	}
 }
