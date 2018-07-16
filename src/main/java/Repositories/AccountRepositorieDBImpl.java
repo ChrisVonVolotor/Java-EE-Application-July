@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 
 import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
+
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import CDI.RepositoryManager;
@@ -19,19 +21,19 @@ import util.JSONUtil;
 @Default
 @Transactional(SUPPORTS)
 public class AccountRepositorieDBImpl implements RepositoryManager {
-	 JSONObject json = new JSONObject();
+	JSONObject json = new JSONObject();
 
 	@PersistenceContext(unitName = "primary")
 	private EntityManager em;
-	
+
 	@Inject
 	private JSONUtil util;
-
+	
 
 	public String findAnAccount(Long aId) {
 		return util.getJSONForObject(em.find(Account.class, aId));
 	}
-	
+
 	public Account getAnAccount(Long aId) {
 		return em.find(Account.class, aId);
 	}
@@ -54,11 +56,11 @@ public class AccountRepositorieDBImpl implements RepositoryManager {
 	public String updateAnAccount(Long aId, String account) {
 		Account thisAccount = util.getObjectForJSON(account, Account.class);
 		Account thenAccount = getAnAccount(aId);
-		if(thenAccount != null) {
-		thenAccount = thisAccount;
-		em.merge(thenAccount);
-		return "{\"message\": \"account sucessfully updated\"}";
-		}else {
+		if (thenAccount != null) {
+			thenAccount = thisAccount;
+			em.merge(thenAccount);
+			return "{\"message\": \"account sucessfully updated\"}";
+		} else {
 			return "{\"message\": \"account not updated\"}";
 
 		}
@@ -66,8 +68,8 @@ public class AccountRepositorieDBImpl implements RepositoryManager {
 
 	@Transactional(REQUIRED)
 	public String deleteAnAccount(Long aId) {
-		Account accountInDB = getAnAccount(aId);
-		em.remove(accountInDB);
+		Account anAccount = getAnAccount(aId);
+		em.remove(anAccount);
 		return "{\"message\": \"account sucessfully deleted\"}";
 	}
 

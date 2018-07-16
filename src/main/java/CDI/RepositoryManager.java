@@ -6,8 +6,12 @@ import accountapp.Account;
 
 public interface RepositoryManager {
 	public String findAnAccount(Long aId);
+
 	public String findAllAccounts();
+
 	public String createAnAccount(String account);
+
 	public String updateAnAccount(Long id, String account);
-	public String deleteAnAccount( Long aId);
+
+	public String deleteAnAccount(Long aId);
 }

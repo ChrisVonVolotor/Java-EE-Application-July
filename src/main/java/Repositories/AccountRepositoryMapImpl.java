@@ -4,18 +4,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
 
 import CDI.RepositoryManager;
 import accountapp.Account;
 import util.JSONUtil;
 
 @Alternative
+@ApplicationScoped
 public class AccountRepositoryMapImpl implements RepositoryManager {
-
 	HashMap<Long, Account> base;
-	
+
 	@Inject
 	private JSONUtil util;
 	
@@ -23,23 +26,23 @@ public class AccountRepositoryMapImpl implements RepositoryManager {
 		this.base = new HashMap<Long, Account>();
 		initAccountMap();
 	}
-	
+
 	private void initAccountMap() {
-		Account account = new Account(1234L, "Joe", "Bloggs");
+		Account account = new Account(1234L , "Moe", "Syzlack");
 		base.put(1234L, account);
-		
+
 	}
 
 	@Override
 	public String findAnAccount(Long aId) {
-		
+
 		return util.getJSONForObject(base.get(aId));
 	}
 
 	@Override
 	public String findAllAccounts() {
 
-		return  util.getJSONForObject(base.values());
+		return util.getJSONForObject(base.values());
 	}
 
 	@Override
