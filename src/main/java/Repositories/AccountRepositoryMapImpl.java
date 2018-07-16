@@ -4,45 +4,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
 
 import CDI.RepositoryManager;
 import accountapp.Account;
+import util.JSONUtil;
 
 @Alternative
+@ApplicationScoped
 public class AccountRepositoryMapImpl implements RepositoryManager {
+	HashMap<Long, Account> base;
 
-	HashMap<Long, Account> base = new HashMap<Long, Account>();
-	@Override
-	public Account findAnAccount(Long aId) {
-		
-		return base.get(aId);
+	@Inject
+	private JSONUtil util;
+	
+	public AccountRepositoryMapImpl() {
+		this.base = new HashMap<Long, Account>();
+		initAccountMap();
+	}
+
+	private void initAccountMap() {
+		Account account = new Account(1234L , "Moe", "Syzlack");
+		base.put(1234L, account);
+
 	}
 
 	@Override
-	public List<Account> findAllAccounts() {
-		List<Account> listAccounts = null;
-		for (Account acc : base.values()) {
-			listAccounts.add(acc);
-		}
-		return listAccounts;
+	public String findAnAccount(Long aId) {
+
+		return util.getJSONForObject(base.get(aId));
 	}
 
 	@Override
-	public Account createAnAccount(Account account) {
-		base.put(account.getaId(), account);
+	public String findAllAccounts() {
+
+		return util.getJSONForObject(base.values());
+	}
+
+	@Override
+	public String createAnAccount(String account) {
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		base.put(thisAccount.getaId(), thisAccount);
+
 		return account;
 	}
 
 	@Override
-	public Account updateAnAccount(Account account, String firstName, String lastName) {
-		base.put(account.getaId(), account);
+	public String updateAnAccount(Long aId, String account) {
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		base.put(aId, thisAccount);
 		return account;
 	}
 
 	@Override
-	public String deleteAnAccount(Account account) {
-		base.remove(account.getaId());
-		return account.getaId() + " Deleted";
+	public String deleteAnAccount(Long aId) {
+		base.remove(aId);
+		return "{\"message\": \"accout sucessfully removed\"}";
 	}
 }

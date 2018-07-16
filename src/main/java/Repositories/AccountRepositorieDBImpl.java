@@ -1,56 +1,76 @@
 package Repositories;
 
+import java.util.Collection;
 import java.util.List;
 
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
 import javax.persistence.*;
-import javax.transaction.*;
-import javax.transaction.Transactional.TxType;
+import javax.transaction.Transactional;
+
+import static javax.transaction.Transactional.TxType.REQUIRED;
+import static javax.transaction.Transactional.TxType.SUPPORTS;
+
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 import CDI.RepositoryManager;
 import accountapp.Account;
+import util.JSONUtil;
 
-@Transactional(value = TxType.SUPPORTS)
+@Default
+@Transactional(SUPPORTS)
 public class AccountRepositorieDBImpl implements RepositoryManager {
+	JSONObject json = new JSONObject();
 
-	@PersistenceContext
+	@PersistenceContext(unitName = "primary")
 	private EntityManager em;
 
-	public Account findAnAccount(Long aId) {
+	@Inject
+	private JSONUtil util;
+	
+
+	public String findAnAccount(Long aId) {
+		return util.getJSONForObject(em.find(Account.class, aId));
+	}
+
+	public Account getAnAccount(Long aId) {
 		return em.find(Account.class, aId);
 	}
 
-	public List<Account> findAllAccounts() {
-		TypedQuery<Account> query = em.createQuery("SELECT * FROM Account m ORDER BY m.aid DESC", Account.class);
-		return query.getResultList();
+	public String findAllAccounts() {
+		Query query = em.createQuery("SELECT m FROM Account m");
+		Collection<Account> accounts = (Collection<Account>) query.getResultList();
+		return util.getJSONForObject(accounts);
 	}
 
-	@Transactional(value = TxType.REQUIRED)
-	public Account createAnAccount(Account account) {
-		em.getTransaction().begin();
-		em.persist(account);
-		em.getTransaction().commit();
-		return account;
+	@Transactional(REQUIRED)
+	public String createAnAccount(String account) {
+		Account anAccount = util.getObjectForJSON(account, Account.class);
+		em.persist(anAccount);
+
+		return "{\"message\": \"account has been sucessfully added\"}";
 	}
 
-	@Transactional(value = TxType.REQUIRED)
-	public Account updateAnAccount(Account account, String firstName, String lastName) {
-		em.find(Account.class, account.getaId());
+	@Transactional(REQUIRED)
+	public String updateAnAccount(Long aId, String account) {
+		Account thisAccount = util.getObjectForJSON(account, Account.class);
+		Account thenAccount = getAnAccount(aId);
+		if (thenAccount != null) {
+			thenAccount = thisAccount;
+			em.merge(thenAccount);
+			return "{\"message\": \"account sucessfully updated\"}";
+		} else {
+			return "{\"message\": \"account not updated\"}";
 
-		em.getTransaction().begin();
-		account.setFirstName(firstName);
-		account.setLastName(lastName);
-		em.getTransaction().commit();
-		return em.find(Account.class, account.getaId());
+		}
 	}
 
-	@Transactional(value = TxType.REQUIRED)
-	public String deleteAnAccount(Account account) {
-		em.find(Account.class, account.getaId());
-
-		em.getTransaction().begin();
-		em.remove(account);
-		em.getTransaction().commit();
-		return account.getaId() + " deleted";
+	@Transactional(REQUIRED)
+	public String deleteAnAccount(Long aId) {
+		Account anAccount = getAnAccount(aId);
+		em.remove(anAccount);
+		return "{\"message\": \"account sucessfully deleted\"}";
 	}
 
 }
